@@ -121,30 +121,99 @@
   .fade-swap{animation:fade .35s ease}
   @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
-  /* MONITOREO console */
-  .console{background:#0B0A0C;border:1px solid var(--line);border-radius:16px;overflow:hidden}
-  .console .chead{display:flex;align-items:center;justify-content:space-between;padding:16px 22px;border-bottom:1px solid var(--line);background:var(--card)}
-  .console .chead .ct{font-weight:700;font-size:.95rem;display:flex;align-items:center;gap:9px}
-  .console .chead .cr{font-size:.74rem;color:var(--dim);font-family:"IBM Plex Mono"}
-  .ctable{width:100%;border-collapse:collapse;font-family:"IBM Plex Mono";font-size:.8rem}
-  .ctable th{text-align:left;padding:14px 22px;color:var(--dim);font-weight:500;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;border-bottom:1px solid var(--line)}
-  .ctable td{padding:15px 22px;border-bottom:1px solid var(--line);color:var(--muted);vertical-align:top}
+  /* MONITOREO / REPORTE — screenshots */
+  .shot{border:1px solid var(--line-2);border-radius:14px;overflow:hidden;background:#0B0A0C;box-shadow:0 30px 70px -40px rgba(0,0,0,.9)}
+  .shot-bar{display:flex;align-items:center;gap:8px;padding:12px 16px;background:#1A191D;border-bottom:1px solid var(--line)}
+  .shot-bar .dot{width:11px;height:11px;border-radius:50%}
+  .shot-bar .dot.r{background:#ED6A5E}.shot-bar .dot.y{background:#F4BF4F}.shot-bar .dot.g{background:#61C554}
+  .shot-bar .urlbar{margin-left:12px;flex:1;background:#0E0D0F;border:1px solid var(--line);border-radius:7px;
+    padding:6px 13px;font-family:"IBM Plex Mono";font-size:.74rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .shot-body{padding:22px}
+  .dash-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:20px}
+  .dash-title{font-family:"Plus Jakarta Sans";font-weight:700;font-size:1.2rem}
+  .dash-sub{font-size:.8rem;color:var(--muted);margin-top:3px}
+  .live{display:inline-flex;align-items:center;gap:7px;background:rgba(240,98,92,.12);border:1px solid rgba(240,98,92,.4);
+    color:var(--red);font-size:.7rem;font-weight:700;letter-spacing:.08em;padding:5px 11px;border-radius:20px;white-space:nowrap}
+  .lpulse{width:7px;height:7px;border-radius:50%;background:var(--red);animation:pulse 1.4s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+  .metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:22px}
+  .metric{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:16px 12px;text-align:center}
+  .metric .mv{font-family:"Plus Jakarta Sans";font-weight:800;font-size:1.5rem;color:var(--text)}
+  .metric .mv.ok{color:var(--green)}.metric .mv.pend{color:var(--gold)}.metric .mv.urg{color:var(--red)}
+  .metric .ml{font-size:.66rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:6px}
+  @media(max-width:640px){.metrics{grid-template-columns:repeat(2,1fr)}}
+  .ctable{width:100%;border-collapse:collapse;font-size:.82rem}
+  .ctable th{text-align:left;padding:12px 14px;color:var(--dim);font-weight:500;font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid var(--line)}
+  .ctable td{padding:13px 14px;border-bottom:1px solid var(--line);color:var(--muted);vertical-align:middle}
   .ctable tr:last-child td{border-bottom:0}
-  .ctable .src{color:var(--gold)}
-  .ctable .msg{color:var(--text)}
-  .ctable .act{color:var(--green)}
+  .ctable .src{color:var(--text);font-weight:500;white-space:nowrap}
+  .ctable .msg{color:var(--muted);font-style:italic}
+  .ctable .act{color:var(--green);font-family:"IBM Plex Mono";font-size:.76rem;white-space:nowrap}
   .ctable .act .id{color:var(--dim)}
   .ctable .warn .src{color:var(--red)}
-  .ctable .warn .act{color:var(--red)}
-  @media(max-width:640px){.ctable th:nth-child(2),.ctable td:nth-child(2){display:none}}
+  .pill{display:inline-block;font-size:.68rem;font-weight:600;padding:4px 10px;border-radius:20px;white-space:nowrap}
+  .pill.ok{background:rgba(52,199,154,.13);color:var(--green)}
+  .pill.pend{background:rgba(230,194,90,.13);color:var(--gold)}
+  .pill.urg{background:rgba(240,98,92,.13);color:var(--red)}
+  .shot-note{text-align:center;margin-top:16px;font-size:.78rem;color:var(--dim);font-family:"IBM Plex Mono"}
+  @media(max-width:680px){.ctable th:nth-child(2),.ctable td:nth-child(2){display:none}}
 
-  /* INFRA */
-  .infra-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:30px}
-  @media(max-width:720px){.infra-grid{grid-template-columns:1fr}}
-  .infra{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:26px 24px}
-  .infra .ii{font-size:1.4rem;margin-bottom:12px;display:block}
-  .infra h4{font-size:1.15rem;font-weight:700;margin-bottom:7px}
-  .infra p{font-size:.92rem;color:var(--muted)}
+  /* REPORTE — planilla */
+  .reporte{background:linear-gradient(180deg,transparent,rgba(52,199,154,.03),transparent)}
+  .shot-bar.sheets{background:#1A4D3A;border-bottom:1px solid #143a2c}
+  .shot-bar.sheets .sheets-ic{font-size:1rem}
+  .shot-bar.sheets .sheets-name{font-weight:600;font-size:.86rem;color:#E9F5EF}
+  .shot-bar.sheets .sheets-tag{margin-left:auto;font-size:.7rem;color:#9FD9C2;font-family:"IBM Plex Mono"}
+  .sheet-wrap{overflow-x:auto}
+  .sheet{width:100%;border-collapse:collapse;font-size:.78rem;min-width:760px}
+  .sheet th{background:#141318;color:var(--muted);font-weight:600;text-align:left;padding:10px 12px;border:1px solid var(--line);font-size:.72rem;white-space:nowrap}
+  .sheet td{padding:10px 12px;border:1px solid var(--line);color:var(--text);vertical-align:middle}
+  .sheet .rownum{background:#141318;color:var(--dim);text-align:center;font-family:"IBM Plex Mono";width:34px}
+  .sheet .mono{font-family:"IBM Plex Mono";color:var(--gold);font-size:.74rem}
+  .rep-points{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:30px}
+  @media(max-width:680px){.rep-points{grid-template-columns:1fr}}
+  .rp{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;font-size:.9rem;color:var(--text)}
+  .rp .rpi{font-size:1.3rem;flex:0 0 auto}
+
+  /* ARQUITECTURA */
+  .arch{display:flex;align-items:stretch;justify-content:center;gap:0;flex-wrap:wrap}
+  .arch-end{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 18px;text-align:center;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:150px;flex:0 0 175px}
+  .arch-end .ae-ic{font-size:1.7rem;margin-bottom:8px}
+  .arch-end .ae-t{font-weight:700;font-size:.98rem;font-family:"Plus Jakarta Sans"}
+  .arch-end .ae-s{font-size:.74rem;color:var(--muted);margin-top:3px}
+  .arch-arrow{display:flex;align-items:center;justify-content:center;color:var(--gold);flex:0 0 42px;opacity:.8}
+  .arch-arrow svg{width:24px;height:24px}
+  .arch-core{flex:1 1 460px;min-width:300px;background:var(--gold-soft);border:1px solid var(--gold-dim);border-radius:16px;
+    padding:34px 22px 24px;position:relative}
+  .core-tag{position:absolute;top:-11px;left:50%;transform:translateX(-50%);white-space:nowrap;background:var(--bg);
+    color:var(--gold);font-size:.68rem;font-weight:600;letter-spacing:.04em;padding:4px 14px;border:1px solid var(--gold-dim);border-radius:14px}
+  .core-pipe{display:flex;align-items:stretch;justify-content:center;gap:0;flex-wrap:wrap}
+  .pnode{flex:1 1 120px;min-width:120px;max-width:170px;background:var(--card-2);border:1px solid var(--line-2);border-radius:11px;
+    padding:16px 12px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:3px}
+  .pnode.hl{border-color:var(--gold);box-shadow:0 0 22px var(--gold-dim)}
+  .pnode .pi{font-size:1.3rem}
+  .pnode b{font-family:"Plus Jakarta Sans";font-size:.92rem;font-weight:700}
+  .pnode small{font-size:.72rem;color:var(--muted);line-height:1.3}
+  .pconn{display:flex;align-items:center;justify-content:center;color:var(--gold);flex:0 0 30px;opacity:.7}
+  .pconn svg{width:18px;height:18px}
+  @media(max-width:860px){
+    .arch{flex-direction:column;align-items:center}
+    .arch-end{width:100%;max-width:340px}
+    .arch-core{width:100%;max-width:340px;flex-basis:auto}
+    .arch-arrow{transform:rotate(90deg);flex-basis:auto;padding:8px 0}
+    .core-pipe{flex-direction:column}
+    .pnode{max-width:none;width:100%}
+    .pconn{transform:rotate(90deg);flex-basis:auto;padding:5px 0}
+  }
+  .guarantees{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:40px}
+  @media(max-width:860px){.guarantees{grid-template-columns:1fr 1fr}}
+  @media(max-width:480px){.guarantees{grid-template-columns:1fr}}
+  .grt{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px 22px;transition:border-color .25s,transform .25s}
+  .grt:hover{border-color:var(--gold-dim);transform:translateY(-3px)}
+  .grt .gi{font-size:1.4rem;display:block;margin-bottom:12px}
+  .grt h4{font-size:1.1rem;font-weight:700;margin-bottom:7px}
+  .grt p{font-size:.88rem;color:var(--muted)}
 
   /* COMPARACIÓN */
   .cmp{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
@@ -216,6 +285,8 @@
     <a href="#como-funciona">Cómo funciona</a>
     <a href="#industrias">Industrias</a>
     <a href="#monitoreo">Monitoreo</a>
+    <a href="#reporte">Reporte</a>
+    <a href="#arquitectura">Arquitectura</a>
     <a href="#comparacion">Comparación</a>
     <a href="#planes">Planes</a>
   </div>
@@ -304,30 +375,143 @@
       <h2>Consola de monitoreo en vivo</h2>
       <p>Tú ves todo desde un panel central: cada mensaje capturado en terreno, a quién se enrutó y con qué prioridad. Trazabilidad completa, ininterrumpida.</p>
     </div>
-    <div class="console reveal">
-      <div class="chead">
-        <span class="ct">🖥 Consola web de monitoreo</span>
-        <span class="cr">Panel de monitoreo integral</span>
+
+    <!-- screenshot: dashboard -->
+    <div class="shot reveal">
+      <div class="shot-bar">
+        <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+        <span class="urlbar">panel.nexo.cl/evento/lollapalooza-2026</span>
       </div>
-      <table class="ctable">
-        <thead><tr><th>Origen (personal)</th><th>Mensaje capturado</th><th>Acción en servidor</th></tr></thead>
-        <tbody>
-          <tr><td class="src">Carlos Mendoza</td><td class="msg">"micro del escenario no funciona"</td><td class="act">Avisé a Diego <span class="id">| ID: INC-8K8A</span></td></tr>
-          <tr><td class="src">María González</td><td class="msg">"no hay llave en la caja"</td><td class="act">Avisé a Fernanda <span class="id">| ID: INC-PRV01</span></td></tr>
-          <tr class="warn"><td class="src">⚠ Rodrigo Vega</td><td class="msg">"se acaban los canapés de salmón"</td><td class="act">Urgente: Avisé a Patricia <span class="id">| ID: INC-BNQ07</span></td></tr>
-        </tbody>
-      </table>
+      <div class="shot-body">
+        <div class="dash-head">
+          <div>
+            <div class="dash-title">Evento · Lollapalooza 2026</div>
+            <div class="dash-sub">Equipo en terreno: 24 personas · 6 áreas</div>
+          </div>
+          <span class="live"><span class="lpulse"></span>EN VIVO</span>
+        </div>
+        <div class="metrics">
+          <div class="metric"><div class="mv">17</div><div class="ml">Incidentes hoy</div></div>
+          <div class="metric"><div class="mv ok">14</div><div class="ml">Resueltos</div></div>
+          <div class="metric"><div class="mv pend">2</div><div class="ml">En curso</div></div>
+          <div class="metric"><div class="mv urg">1</div><div class="ml">Urgente</div></div>
+          <div class="metric"><div class="mv">2m 40s</div><div class="ml">Resp. promedio</div></div>
+        </div>
+        <table class="ctable">
+          <thead><tr><th>Origen</th><th>Mensaje capturado</th><th>Acción</th><th>Estado</th></tr></thead>
+          <tbody>
+            <tr><td class="src">Carlos Mendoza</td><td class="msg">"micro del escenario no funciona"</td><td class="act">→ Diego <span class="id">INC-8K8A</span></td><td><span class="pill ok">Resuelto</span></td></tr>
+            <tr><td class="src">María González</td><td class="msg">"no hay llave en la caja"</td><td class="act">→ Fernanda <span class="id">INC-PRV01</span></td><td><span class="pill ok">Resuelto</span></td></tr>
+            <tr class="warn"><td class="src">⚠ Rodrigo Vega</td><td class="msg">"se acaban los canapés de salmón"</td><td class="act">→ Patricia <span class="id">INC-BNQ07</span></td><td><span class="pill urg">Urgente</span></td></tr>
+            <tr><td class="src">Lucas Soto</td><td class="msg">"falta agua en camarines"</td><td class="act">→ Producción <span class="id">INC-PRD33</span></td><td><span class="pill pend">En curso</span></td></tr>
+            <tr><td class="src">Ana Rivas</td><td class="msg">"luz del sector B parpadeando"</td><td class="act">→ Iluminación <span class="id">INC-ILU12</span></td><td><span class="pill pend">En curso</span></td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
-    <div class="infra-grid reveal">
-      <div class="infra">
-        <span class="ii">📦</span>
-        <h4>Un contenedor por cliente</h4>
-        <p>Cada empresa corre en su propio contenedor Docker aislado, alojado y administrado por NEXO. Tus datos nunca se mezclan con los de otra operación.</p>
+    <p class="shot-note">Vista representativa del panel · los datos se actualizan en tiempo real durante el evento.</p>
+  </div>
+</section>
+
+<!-- REPORTE FINAL -->
+<section class="block reporte" id="reporte">
+  <div class="wrap">
+    <div class="head reveal">
+      <span class="eyebrow">Al cerrar el evento</span>
+      <h2>Un reporte completo, <span class="lead-gold">listo para entregar</span></h2>
+      <p>Cuando termina el evento, NEXO consolida todo lo registrado y lo vuelca a una planilla de Google Sheets o Excel: cada incidente, quién lo reportó, a quién se asignó, los tiempos y la resolución. El cliente recibe el reporte sin que nadie arme nada a mano.</p>
+    </div>
+
+    <!-- screenshot: planilla -->
+    <div class="shot reveal">
+      <div class="shot-bar sheets">
+        <span class="sheets-ic">📊</span>
+        <span class="sheets-name">Reporte_Lollapalooza_2026.xlsx</span>
+        <span class="sheets-tag">Exportado automáticamente</span>
       </div>
-      <div class="infra">
-        <span class="ii">🛡</span>
-        <h4>Sin pérdida de mensajes</h4>
-        <p>Cada reporte se registra primero y se sincroniza después. Un corte de red no borra nada: la bitácora queda completa y la escalación sigue corriendo.</p>
+      <div class="sheet-wrap">
+        <table class="sheet">
+          <thead>
+            <tr><th class="rownum"></th><th>ID</th><th>Área</th><th>Reporte</th><th>Reportó</th><th>Asignado</th><th>Resolución</th><th>Tiempo</th><th>Estado</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="rownum">1</td><td class="mono">INC-8K8A</td><td>Sonido</td><td>Micrófono escenario sin señal</td><td>C. Mendoza</td><td>D. Ramírez</td><td>Reemplazo cable XLR canal 3</td><td>3m 10s</td><td><span class="pill ok">Resuelto</span></td></tr>
+            <tr><td class="rownum">2</td><td class="mono">INC-PRV01</td><td>Accesos</td><td>Sin llave en caja fuerte</td><td>M. González</td><td>F. Lazo</td><td>Llave en portería del edificio</td><td>1m 55s</td><td><span class="pill ok">Resuelto</span></td></tr>
+            <tr><td class="rownum">3</td><td class="mono">INC-BNQ07</td><td>Catering</td><td>Quiebre de stock canapés</td><td>R. Vega</td><td>P. Núñez</td><td>Bandeja de reserva liberada</td><td>4m 20s</td><td><span class="pill ok">Resuelto</span></td></tr>
+            <tr><td class="rownum">4</td><td class="mono">INC-PRD33</td><td>Producción</td><td>Falta agua en camarines</td><td>L. Soto</td><td>Producción</td><td>—</td><td>en curso</td><td><span class="pill pend">En curso</span></td></tr>
+            <tr><td class="rownum">5</td><td class="mono">INC-ILU12</td><td>Iluminación</td><td>Luz sector B parpadeando</td><td>A. Rivas</td><td>Iluminación</td><td>—</td><td>en curso</td><td><span class="pill pend">En curso</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="rep-points reveal">
+      <div class="rp"><span class="rpi">🧾</span><span>Cada incidente con su responsable, tiempos y resolución</span></div>
+      <div class="rp"><span class="rpi">⏱</span><span>Tiempos de respuesta y resolución calculados solos</span></div>
+      <div class="rp"><span class="rpi">📤</span><span>Se entrega en Google Sheets o se descarga en Excel</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ARQUITECTURA -->
+<section class="block" id="arquitectura">
+  <div class="wrap">
+    <div class="head reveal">
+      <span class="eyebrow">Bajo el capó</span>
+      <h2>Infraestructura <span class="lead-gold">a prueba de terreno</span></h2>
+      <p>El miedo de toda operación es que la herramienta se caiga en el peor momento. NEXO está diseñado al revés: asume que la red va a fallar y se protege por capas.</p>
+    </div>
+
+    <div class="arch reveal">
+      <!-- entrada -->
+      <div class="arch-end">
+        <span class="ae-ic">💬</span>
+        <span class="ae-t">WhatsApp del equipo</span>
+        <span class="ae-s">reportes en terreno</span>
+      </div>
+      <div class="arch-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12h16M14 6l6 6-6 6"/></svg></div>
+
+      <!-- contenedor -->
+      <div class="arch-core">
+        <span class="core-tag">NEXO · contenedor Docker aislado por cliente</span>
+        <div class="core-pipe">
+          <div class="pnode"><span class="pi">🧠</span><b>Motor IA</b><small>entiende y enruta</small></div>
+          <div class="pconn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12h16M14 6l6 6-6 6"/></svg></div>
+          <div class="pnode hl"><span class="pi">🗄</span><b>Base de datos SQLite</b><small>local · fuente de verdad · registra primero</small></div>
+          <div class="pconn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12h16M14 6l6 6-6 6"/></svg></div>
+          <div class="pnode"><span class="pi">🔁</span><b>Cola con reintentos</b><small>nada se pierde</small></div>
+        </div>
+      </div>
+
+      <div class="arch-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12h16M14 6l6 6-6 6"/></svg></div>
+      <!-- salida -->
+      <div class="arch-end">
+        <span class="ae-ic">📊</span>
+        <span class="ae-t">Google Sheets + panel cliente</span>
+        <span class="ae-s">espejo en la nube · sincroniza cuando hay red</span>
+      </div>
+    </div>
+
+    <div class="guarantees reveal">
+      <div class="grt">
+        <span class="gi">📥</span>
+        <h4>Registra primero</h4>
+        <p>Cada mensaje se guarda en la base de datos antes de procesarse. Si algo falla después, el dato ya está a salvo.</p>
+      </div>
+      <div class="grt">
+        <span class="gi">🔁</span>
+        <h4>Cola con reintentos</h4>
+        <p>Si se corta la red o un servicio no responde, la acción no se pierde: se reintenta sola hasta completarse.</p>
+      </div>
+      <div class="grt">
+        <span class="gi">📦</span>
+        <h4>Aislamiento por cliente</h4>
+        <p>Cada empresa corre en su propio contenedor. Una falla en una operación nunca afecta a otra.</p>
+      </div>
+      <div class="grt">
+        <span class="gi">♻️</span>
+        <h4>Se recupera solo</h4>
+        <p>Si el sistema se reinicia, vuelve con el estado exacto: las tareas y los tiempos de escalación siguen donde estaban.</p>
       </div>
     </div>
   </div>
