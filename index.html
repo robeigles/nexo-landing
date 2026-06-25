@@ -1,717 +1,730 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NEXO · Inteligencia Artificial Operativa</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<title>NEXO â€” CoordinaciÃ³n de Eventos en Vivo</title>
 <style>
-  :root{
-    --bg:#0E0D0F;
-    --bg-2:#121013;
-    --card:#17161A;
-    --card-2:#1C1B20;
-    --line:rgba(255,255,255,.07);
-    --line-2:rgba(255,255,255,.12);
-    --text:#F2F2F4;
-    --muted:#9B9BA3;
-    --dim:#6A6A72;
-    --gold:#E6C25A;
-    --gold-bright:#F0D27A;
-    --gold-dim:rgba(230,194,90,.30);
-    --gold-soft:rgba(230,194,90,.10);
-    --green:#34C79A;
-    --green-bub:#0B5C4E;
-    --gray-bub:#26252B;
-    --red:#F0625C;
-    --maxw:1080px;
+  :root {
+    --bg: #08080e;
+    --surface: #111118;
+    --surface2: #18181f;
+    --border: #252535;
+    --accent: #6c63ff;
+    --accent2: #ff6b6b;
+    --accent3: #43e97b;
+    --accent4: #f9ca24;
+    --text: #e8e8f0;
+    --muted: #7777aa;
+    --gradient: linear-gradient(135deg, #6c63ff 0%, #ff6b6b 100%);
   }
-  *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
-  body{
-    background:var(--bg);color:var(--text);
-    font-family:"Inter",system-ui,sans-serif;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden;
-  }
-  body::before{
-    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
-    background:radial-gradient(800px 500px at 80% -10%, rgba(230,194,90,.07), transparent 60%);
-  }
-  h1,h2,h3,h4{font-family:"Plus Jakarta Sans",sans-serif;line-height:1.1;letter-spacing:-.01em}
-  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px;position:relative;z-index:1}
-  section{scroll-margin-top:78px}
-  .block{padding:104px 0}
-  .eyebrow{font-size:.74rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
-  .lead-gold{color:var(--gold)}
-  .head h2{font-size:clamp(1.9rem,4.6vw,3rem);font-weight:800;margin:14px 0 18px}
-  .head p{color:var(--muted);max-width:620px;font-size:1.05rem}
-  .head{margin-bottom:54px}
-
-  /* NAV */
-  nav{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;align-items:center;justify-content:space-between;
-    padding:18px 26px;transition:background .3s,border-color .3s,padding .3s;border-bottom:1px solid transparent}
-  nav.scrolled{background:rgba(14,13,15,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:13px 26px}
-  .brand{font-family:"Plus Jakarta Sans";font-weight:800;letter-spacing:.18em;font-size:1.15rem;color:var(--gold);text-decoration:none}
-  .navlinks{display:flex;gap:28px;align-items:center}
-  .navlinks a{color:var(--muted);text-decoration:none;font-size:.85rem;font-weight:500;transition:color .2s;position:relative}
-  .navlinks a:hover,.navlinks a.active{color:var(--text)}
-  .navlinks a.active::after{content:"";position:absolute;left:0;right:0;bottom:-6px;height:2px;background:var(--gold);border-radius:2px}
-  .nav-cta{font-size:.82rem;font-weight:600;color:#1a1709;text-decoration:none;background:var(--gold);padding:9px 17px;border-radius:7px;transition:background .2s,box-shadow .2s}
-  .nav-cta:hover{background:var(--gold-bright);box-shadow:0 0 22px var(--gold-dim)}
-  .burger{display:none;background:none;border:0;color:var(--text);cursor:pointer;font-size:1.4rem}
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height:1.6; }
 
   /* HERO */
-  .hero{padding:150px 0 90px}
-  .dossier{display:inline-flex;align-items:center;border:1px solid var(--gold-dim);color:var(--gold);background:var(--gold-soft);
-    font-size:.72rem;font-weight:600;letter-spacing:.12em;padding:6px 13px;border-radius:20px;float:right;margin-top:6px}
-  .hero h1{font-size:clamp(2.3rem,6vw,4.1rem);font-weight:800;margin:18px 0 26px;max-width:15ch}
-  .hero .intro{color:var(--muted);font-size:1.12rem;max-width:640px;margin-bottom:30px}
-  .quote{border-left:3px solid var(--gold);padding:6px 0 6px 22px;margin:0 0 44px;max-width:620px}
-  .quote p{font-style:italic;color:var(--gold);font-size:1.18rem;font-weight:500;font-family:"Plus Jakarta Sans"}
-  .whatis{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:34px 32px;margin-bottom:42px}
-  .whatis h3{font-size:1.05rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text);margin-bottom:14px}
-  .whatis h3 span{color:var(--gold)}
-  .whatis p{color:var(--muted);font-size:1rem}
-  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-  .stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:30px 22px;text-align:center}
-  .stat .num{font-family:"Plus Jakarta Sans";font-weight:800;font-size:2.6rem;color:var(--gold);line-height:1}
-  .stat .lab{font-size:.74rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:12px}
-  @media(max-width:620px){.stats{grid-template-columns:1fr}.dossier{float:none;display:inline-flex;margin-bottom:8px}}
-
-  /* PASOS */
-  .pasos{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:56px}
-  .paso{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px 22px;position:relative}
-  .paso .pn{font-size:.74rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
-  .paso h4{font-size:1.15rem;font-weight:700;margin-bottom:8px}
-  .paso p{font-size:.9rem;color:var(--muted)}
-  @media(max-width:780px){.pasos{grid-template-columns:1fr 1fr}}
-  @media(max-width:480px){.pasos{grid-template-columns:1fr}}
-
-  /* CASO BASE — two columns */
-  .caso{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:32px 30px}
-  .caso .ctitle{font-size:.8rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:24px}
-  .caso .ctitle b{color:var(--gold);font-weight:600}
-  .cols{display:grid;grid-template-columns:1fr 1fr;gap:30px}
-  .col .clab{font-size:.72rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--line)}
-  @media(max-width:720px){.cols{grid-template-columns:1fr;gap:24px}}
-
-  .stream{display:flex;flex-direction:column;gap:9px}
-  .bub{max-width:88%;padding:9px 13px;border-radius:11px;font-size:.86rem;line-height:1.45}
-  .bub.in{align-self:flex-start;background:var(--gray-bub);border-top-left-radius:3px}
-  .bub.out{align-self:flex-end;background:var(--green-bub);border-top-right-radius:3px}
-  .bub.urgent{border:1px solid rgba(240,98,92,.45)}
-  .bub .uflag{color:var(--red);font-weight:600}
-  .bub .id{font-family:"IBM Plex Mono";font-size:.74rem;color:var(--gold)}
-  .bub.res{align-self:stretch;max-width:100%;background:rgba(52,199,154,.08);border:1px solid rgba(52,199,154,.3)}
-  .bub.res b{color:var(--green)}
-
-  /* INDUSTRIAS selector */
-  .tabs{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:30px}
-  .tab{font-family:"Inter";font-size:.88rem;font-weight:500;color:var(--muted);background:var(--card);
-    border:1px solid var(--line);border-radius:10px;padding:11px 16px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:8px}
-  .tab:hover{border-color:var(--line-2);color:var(--text)}
-  .tab.active{border-color:var(--gold);color:var(--text);background:var(--gold-soft)}
-  .tab .ti{font-size:1rem}
-  .ind-panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:30px 30px;min-height:300px}
-  .ind-panel .ihead{display:flex;align-items:center;gap:12px;margin-bottom:6px}
-  .ind-panel .ihead .ic{font-size:1.5rem}
-  .ind-panel .ihead h3{font-size:1.4rem;font-weight:700}
-  .ind-panel .who{font-size:.8rem;color:var(--dim);font-weight:500;letter-spacing:.04em;margin-bottom:20px}
-  .fade-swap{animation:fade .35s ease}
-  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-
-  /* MONITOREO / REPORTE — screenshots */
-  .shot{border:1px solid var(--line-2);border-radius:14px;overflow:hidden;background:#0B0A0C;box-shadow:0 30px 70px -40px rgba(0,0,0,.9)}
-  .shot-bar{display:flex;align-items:center;gap:8px;padding:12px 16px;background:#1A191D;border-bottom:1px solid var(--line)}
-  .shot-bar .dot{width:11px;height:11px;border-radius:50%}
-  .shot-bar .dot.r{background:#ED6A5E}.shot-bar .dot.y{background:#F4BF4F}.shot-bar .dot.g{background:#61C554}
-  .shot-bar .urlbar{margin-left:12px;flex:1;background:#0E0D0F;border:1px solid var(--line);border-radius:7px;
-    padding:6px 13px;font-family:"IBM Plex Mono";font-size:.74rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .shot-body{padding:22px}
-  .dash-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:20px}
-  .dash-title{font-family:"Plus Jakarta Sans";font-weight:700;font-size:1.2rem}
-  .dash-sub{font-size:.8rem;color:var(--muted);margin-top:3px}
-  .live{display:inline-flex;align-items:center;gap:7px;background:rgba(240,98,92,.12);border:1px solid rgba(240,98,92,.4);
-    color:var(--red);font-size:.7rem;font-weight:700;letter-spacing:.08em;padding:5px 11px;border-radius:20px;white-space:nowrap}
-  .lpulse{width:7px;height:7px;border-radius:50%;background:var(--red);animation:pulse 1.4s ease-in-out infinite}
-  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
-  .metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:22px}
-  .metric{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:16px 12px;text-align:center}
-  .metric .mv{font-family:"Plus Jakarta Sans";font-weight:800;font-size:1.5rem;color:var(--text)}
-  .metric .mv.ok{color:var(--green)}.metric .mv.pend{color:var(--gold)}.metric .mv.urg{color:var(--red)}
-  .metric .ml{font-size:.66rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:6px}
-  @media(max-width:640px){.metrics{grid-template-columns:repeat(2,1fr)}}
-  .ctable{width:100%;border-collapse:collapse;font-size:.82rem}
-  .ctable th{text-align:left;padding:12px 14px;color:var(--dim);font-weight:500;font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid var(--line)}
-  .ctable td{padding:13px 14px;border-bottom:1px solid var(--line);color:var(--muted);vertical-align:middle}
-  .ctable tr:last-child td{border-bottom:0}
-  .ctable .src{color:var(--text);font-weight:500;white-space:nowrap}
-  .ctable .msg{color:var(--muted);font-style:italic}
-  .ctable .act{color:var(--green);font-family:"IBM Plex Mono";font-size:.76rem;white-space:nowrap}
-  .ctable .act .id{color:var(--dim)}
-  .ctable .warn .src{color:var(--red)}
-  .pill{display:inline-block;font-size:.68rem;font-weight:600;padding:4px 10px;border-radius:20px;white-space:nowrap}
-  .pill.ok{background:rgba(52,199,154,.13);color:var(--green)}
-  .pill.pend{background:rgba(230,194,90,.13);color:var(--gold)}
-  .pill.urg{background:rgba(240,98,92,.13);color:var(--red)}
-  .shot-note{text-align:center;margin-top:16px;font-size:.78rem;color:var(--dim);font-family:"IBM Plex Mono"}
-  @media(max-width:680px){.ctable th:nth-child(2),.ctable td:nth-child(2){display:none}}
-
-  /* REPORTE — planilla */
-  .reporte{background:linear-gradient(180deg,transparent,rgba(52,199,154,.03),transparent)}
-  .shot-bar.sheets{background:#1A4D3A;border-bottom:1px solid #143a2c}
-  .shot-bar.sheets .sheets-ic{font-size:1rem}
-  .shot-bar.sheets .sheets-name{font-weight:600;font-size:.86rem;color:#E9F5EF}
-  .shot-bar.sheets .sheets-tag{margin-left:auto;font-size:.7rem;color:#9FD9C2;font-family:"IBM Plex Mono"}
-  .sheet-wrap{overflow-x:auto}
-  .sheet{width:100%;border-collapse:collapse;font-size:.78rem;min-width:760px}
-  .sheet th{background:#141318;color:var(--muted);font-weight:600;text-align:left;padding:10px 12px;border:1px solid var(--line);font-size:.72rem;white-space:nowrap}
-  .sheet td{padding:10px 12px;border:1px solid var(--line);color:var(--text);vertical-align:middle}
-  .sheet .rownum{background:#141318;color:var(--dim);text-align:center;font-family:"IBM Plex Mono";width:34px}
-  .sheet .mono{font-family:"IBM Plex Mono";color:var(--gold);font-size:.74rem}
-  .rep-points{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:30px}
-  @media(max-width:680px){.rep-points{grid-template-columns:1fr}}
-  .rp{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;font-size:.9rem;color:var(--text)}
-  .rp .rpi{font-size:1.3rem;flex:0 0 auto}
-
-  /* ARQUITECTURA */
-  .arch{display:flex;align-items:stretch;justify-content:center;gap:0;flex-wrap:wrap}
-  .arch-end{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 18px;text-align:center;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:150px;flex:0 0 175px}
-  .arch-end .ae-ic{font-size:1.7rem;margin-bottom:8px}
-  .arch-end .ae-t{font-weight:700;font-size:.98rem;font-family:"Plus Jakarta Sans"}
-  .arch-end .ae-s{font-size:.74rem;color:var(--muted);margin-top:3px}
-  .arch-arrow{display:flex;align-items:center;justify-content:center;color:var(--gold);flex:0 0 42px;opacity:.8}
-  .arch-arrow svg{width:24px;height:24px}
-  .arch-core{flex:1 1 460px;min-width:300px;background:var(--gold-soft);border:1px solid var(--gold-dim);border-radius:16px;
-    padding:34px 22px 24px;position:relative}
-  .core-tag{position:absolute;top:-11px;left:50%;transform:translateX(-50%);white-space:nowrap;background:var(--bg);
-    color:var(--gold);font-size:.68rem;font-weight:600;letter-spacing:.04em;padding:4px 14px;border:1px solid var(--gold-dim);border-radius:14px}
-  .core-pipe{display:flex;align-items:stretch;justify-content:center;gap:0;flex-wrap:wrap}
-  .pnode{flex:1 1 120px;min-width:120px;max-width:170px;background:var(--card-2);border:1px solid var(--line-2);border-radius:11px;
-    padding:16px 12px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:3px}
-  .pnode.hl{border-color:var(--gold);box-shadow:0 0 22px var(--gold-dim)}
-  .pnode .pi{font-size:1.3rem}
-  .pnode b{font-family:"Plus Jakarta Sans";font-size:.92rem;font-weight:700}
-  .pnode small{font-size:.72rem;color:var(--muted);line-height:1.3}
-  .pconn{display:flex;align-items:center;justify-content:center;color:var(--gold);flex:0 0 30px;opacity:.7}
-  .pconn svg{width:18px;height:18px}
-  @media(max-width:860px){
-    .arch{flex-direction:column;align-items:center}
-    .arch-end{width:100%;max-width:340px}
-    .arch-core{width:100%;max-width:340px;flex-basis:auto}
-    .arch-arrow{transform:rotate(90deg);flex-basis:auto;padding:8px 0}
-    .core-pipe{flex-direction:column}
-    .pnode{max-width:none;width:100%}
-    .pconn{transform:rotate(90deg);flex-basis:auto;padding:5px 0}
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 80px 40px; position: relative; overflow: hidden;
   }
-  .guarantees{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:40px}
-  @media(max-width:860px){.guarantees{grid-template-columns:1fr 1fr}}
-  @media(max-width:480px){.guarantees{grid-template-columns:1fr}}
-  .grt{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px 22px;transition:border-color .25s,transform .25s}
-  .grt:hover{border-color:var(--gold-dim);transform:translateY(-3px)}
-  .grt .gi{font-size:1.4rem;display:block;margin-bottom:12px}
-  .grt h4{font-size:1.1rem;font-weight:700;margin-bottom:7px}
-  .grt p{font-size:.88rem;color:var(--muted)}
-
-  /* COMPARACIÓN */
-  .cmp{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
-  .cmp th,.cmp td{padding:16px 18px;text-align:left;border-bottom:1px solid var(--line);font-size:.9rem}
-  .cmp thead th{font-weight:700;font-size:.92rem;background:var(--bg-2)}
-  .cmp thead th.nexo{color:var(--gold)}
-  .cmp tbody tr:last-child td{border-bottom:0}
-  .cmp .feat{color:var(--muted)}
-  .cmp .yes{color:var(--green);font-weight:600}
-  .cmp .no{color:var(--red)}
-  .cmp .warn{color:var(--gold)}
-  .cmp td.nexocell{background:var(--gold-soft)}
-  @media(max-width:680px){.cmp{font-size:.8rem}.cmp th,.cmp td{padding:12px 10px}}
-
-  /* PLANES */
-  .plan-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:840px;margin:0 auto}
-  @media(max-width:680px){.plan-grid{grid-template-columns:1fr}}
-  .plan{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:34px 30px;display:flex;flex-direction:column;position:relative}
-  .plan.reco{border-color:var(--gold);box-shadow:0 24px 60px -34px var(--gold-dim)}
-  .plan.reco::after{content:"Recomendado";position:absolute;top:-11px;right:26px;background:var(--gold);color:#1a1709;font-size:.66rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:5px 12px;border-radius:14px}
-  .plan .pk{font-size:1.2rem;font-weight:700;margin-bottom:8px}
-  .plan .pv{font-family:"Plus Jakarta Sans";font-weight:800;font-size:1.7rem;color:var(--gold);margin-bottom:22px}
-  .plan ul{list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:28px;flex:1}
-  .plan li{font-size:.92rem;color:var(--text);display:flex;gap:10px;align-items:flex-start}
-  .plan li::before{content:"✓";color:var(--green);font-weight:700;flex:0 0 auto}
-  .plan .pbtn{text-align:center;text-decoration:none;font-weight:600;font-size:.9rem;padding:13px;border-radius:9px;transition:all .2s;cursor:pointer;border:0}
-  .plan .pbtn.solid{background:var(--gold);color:#1a1709}
-  .plan .pbtn.solid:hover{background:var(--gold-bright);box-shadow:0 0 24px var(--gold-dim)}
-  .plan .pbtn.outline{border:1px solid var(--line-2);color:var(--text);background:none}
-  .plan .pbtn.outline:hover{border-color:var(--gold);color:var(--gold)}
-
-  /* CONTACTO */
-  .contact{background:linear-gradient(180deg,transparent,var(--gold-soft),transparent)}
-  .contact-box{text-align:center;max-width:680px;margin:0 auto}
-  .contact-box h2{font-size:clamp(1.8rem,4.5vw,2.8rem);font-weight:800;margin-bottom:14px}
-  .contact-box p{color:var(--muted);margin-bottom:32px;font-size:1.05rem}
-  .contact-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
-  .ca{text-decoration:none;font-weight:600;font-size:.92rem;padding:14px 26px;border-radius:10px;display:inline-flex;align-items:center;gap:9px;transition:all .2s}
-  .ca.mail{background:var(--gold);color:#1a1709}
-  .ca.mail:hover{background:var(--gold-bright);box-shadow:0 0 26px var(--gold-dim)}
-  .ca.wa{border:1px solid var(--green);color:var(--green);background:rgba(52,199,154,.06)}
-  .ca.wa:hover{background:rgba(52,199,154,.14)}
-
-  footer{border-top:1px solid var(--line);padding:30px 0}
-  .foot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
-  .foot .fl{font-family:"Plus Jakarta Sans";font-weight:700;color:var(--muted);font-size:.86rem}
-  .foot .fr{font-size:.72rem;letter-spacing:.08em;color:var(--dim);text-transform:uppercase}
-
-  .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
-  .reveal.in{opacity:1;transform:none}
-
-  @media(max-width:820px){
-    .navlinks{position:fixed;inset:62px 0 auto 0;flex-direction:column;background:rgba(14,13,15,.97);
-      backdrop-filter:blur(12px);padding:20px 26px;gap:18px;border-bottom:1px solid var(--line);display:none}
-    .navlinks.open{display:flex}
-    .navlinks a.active::after{display:none}
-    .burger{display:block}
-    .block{padding:74px 0}
+  .hero::before {
+    content:''; position:absolute; inset:0;
+    background:
+      radial-gradient(ellipse 60% 55% at 25% 40%, rgba(108,99,255,0.15) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 45% at 78% 60%, rgba(255,107,107,0.10) 0%, transparent 60%);
+    pointer-events:none;
   }
-  @media(prefers-reduced-motion:reduce){*{animation:none!important;scroll-behavior:auto!important}.reveal{opacity:1;transform:none}}
+  .badge {
+    display:inline-flex; align-items:center; gap:8px;
+    background: rgba(108,99,255,0.12); border:1px solid rgba(108,99,255,0.35);
+    border-radius:999px; padding:6px 20px; font-size:12px; color:#a99fff;
+    letter-spacing:0.06em; text-transform:uppercase; margin-bottom:36px;
+  }
+  .hero-title {
+    font-size: clamp(72px,12vw,120px); font-weight:900; letter-spacing:-0.05em;
+    line-height:0.9; background: var(--gradient);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    margin-bottom:12px;
+  }
+  .hero-tagline {
+    font-size: clamp(20px,3vw,28px); font-weight:300; color:#9999bb; margin-bottom:32px;
+  }
+  .hero-hook {
+    font-size: 18px; max-width:520px; color:#ccccdd; margin-bottom:52px; line-height:1.7;
+  }
+  .hero-hook strong { color: var(--text); font-weight:700; }
+  .cta-row { display:flex; gap:16px; flex-wrap:wrap; justify-content:center; }
+  .cta-primary {
+    background: var(--gradient); border-radius:12px; padding:14px 32px;
+    font-size:15px; font-weight:700; color:#fff; text-decoration:none;
+    letter-spacing:0.01em;
+  }
+  .cta-secondary {
+    background: transparent; border:1.5px solid var(--border); border-radius:12px;
+    padding:14px 32px; font-size:15px; color: var(--muted); text-decoration:none;
+  }
+
+  /* PAIN */
+  .pain-section {
+    padding: 100px 40px; max-width: 960px; margin: 0 auto; text-align: center;
+  }
+  .pain-section .eyebrow {
+    font-size:11px; text-transform:uppercase; letter-spacing:0.12em; color: var(--accent2);
+    font-weight:700; margin-bottom:16px;
+  }
+  .pain-section h2 {
+    font-size: clamp(28px,4vw,42px); font-weight:800; letter-spacing:-0.02em;
+    margin-bottom:56px; line-height:1.15;
+  }
+  .pain-grid {
+    display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:20px;
+    text-align:left;
+  }
+  .pain-card {
+    background: rgba(255,107,107,0.05); border:1px solid rgba(255,107,107,0.18);
+    border-radius:16px; padding:24px;
+  }
+  .pain-card .pain-icon { font-size:28px; margin-bottom:12px; }
+  .pain-card h3 { font-size:15px; font-weight:700; margin-bottom:8px; color:#ffaaaa; }
+  .pain-card p { font-size:13px; color: var(--muted); line-height:1.6; }
+
+  /* SOLUTION */
+  hr.divider { border:none; border-top:1px solid var(--border); }
+  section { padding:80px 40px; max-width:1100px; margin:0 auto; }
+  .eyebrow { font-size:11px; text-transform:uppercase; letter-spacing:0.12em; color: var(--accent); font-weight:700; margin-bottom:14px; }
+  h2 { font-size: clamp(28px,4vw,42px); font-weight:800; letter-spacing:-0.02em; margin-bottom:16px; line-height:1.15; }
+  .section-desc { font-size:17px; color: var(--muted); max-width:580px; margin-bottom:52px; }
+
+  /* FEATURE ROWS */
+  .feature-row {
+    display:flex; gap:48px; align-items:center; margin-bottom:72px; flex-wrap:wrap;
+  }
+  .feature-row.reverse { flex-direction:row-reverse; }
+  .feature-text { flex:1; min-width:260px; }
+  .feature-text h3 { font-size:24px; font-weight:800; margin-bottom:12px; letter-spacing:-0.01em; }
+  .feature-text p { font-size:15px; color: var(--muted); line-height:1.7; margin-bottom:16px; }
+  .feature-benefit {
+    display:flex; align-items:flex-start; gap:10px;
+    font-size:14px; color:#ccccdd; padding:6px 0;
+  }
+  .feature-benefit .dot {
+    width:20px; height:20px; border-radius:50%; flex-shrink:0; margin-top:1px;
+    display:flex; align-items:center; justify-content:center; font-size:11px;
+  }
+  .feature-visual {
+    flex:1; min-width:280px; max-width:400px;
+  }
+
+  /* WA MOCK */
+  .wa-mock {
+    background: var(--surface); border:1px solid var(--border); border-radius:20px; overflow:hidden;
+  }
+  .wa-top {
+    background: var(--surface2); border-bottom:1px solid var(--border);
+    padding:12px 18px; display:flex; align-items:center; gap:10px;
+  }
+  .wa-avatar {
+    width:34px; height:34px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:14px; font-weight:800; flex-shrink:0;
+  }
+  .wa-name { font-size:13px; font-weight:700; }
+  .wa-role { font-size:10px; color: var(--muted); }
+  .wa-body { padding:18px; display:flex; flex-direction:column; gap:8px; }
+  .wa-msg {
+    border-radius:10px; padding:9px 13px; font-size:12px;
+    max-width:88%; line-height:1.45;
+  }
+  .sent {
+    background:rgba(108,99,255,0.18); border:1px solid rgba(108,99,255,0.28);
+    align-self:flex-end; color:#d4d0ff;
+  }
+  .recv {
+    background: var(--surface2); border:1px solid var(--border);
+    align-self:flex-start; color: var(--text);
+  }
+  .wa-time { font-size:9px; color: var(--muted); text-align:right; margin-top:3px; }
+
+  /* ESCALATION VISUAL */
+  .esc-visual {
+    background: var(--surface); border:1px solid var(--border); border-radius:20px; padding:28px;
+  }
+  .esc-title { font-size:13px; font-weight:700; color: var(--muted); margin-bottom:20px; text-align:center; }
+  .esc-steps { display:flex; flex-direction:column; gap:12px; }
+  .esc-step {
+    display:flex; align-items:center; gap:14px; padding:12px 16px;
+    border-radius:10px; border:1px solid;
+  }
+  .esc-step-icon { font-size:20px; flex-shrink:0; }
+  .esc-step-info { flex:1; }
+  .esc-step-name { font-size:13px; font-weight:700; }
+  .esc-step-desc { font-size:11px; opacity:0.65; margin-top:2px; }
+  .esc-step-time { font-size:11px; opacity:0.6; white-space:nowrap; }
+
+  .step-open     { background:rgba(64,156,255,0.06);  border-color:rgba(64,156,255,0.25);  color:#60a5fa; }
+  .step-rec      { background:rgba(249,202,36,0.06);  border-color:rgba(249,202,36,0.25);  color:#f9ca24; }
+  .step-esc      { background:rgba(255,107,107,0.08); border-color:rgba(255,107,107,0.3);  color:#ff9f9f; }
+  .step-crit     { background:rgba(200,0,0,0.10);     border-color:rgba(220,40,40,0.4);    color:#ff6060; }
+  .step-done     { background:rgba(67,233,123,0.06);  border-color:rgba(67,233,123,0.25);  color:#43e97b; }
+
+  .esc-arrow-down { text-align:center; color: var(--border); font-size:18px; }
+
+  /* ROLES */
+  .roles-row {
+    display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap:16px;
+  }
+  .role-card {
+    border-radius:16px; padding:24px 20px; border:1.5px solid;
+  }
+  .role-icon { font-size:30px; margin-bottom:10px; }
+  .role-name { font-size:15px; font-weight:800; margin-bottom:6px; }
+  .role-desc { font-size:12px; line-height:1.55; opacity:0.75; }
+  .r-tec  { background:rgba(64,156,255,0.05);  border-color:rgba(64,156,255,0.25);  color:#60a5fa; }
+  .r-enc  { background:rgba(67,233,123,0.05);  border-color:rgba(67,233,123,0.25);  color:#43e97b; }
+  .r-prod { background:rgba(249,202,36,0.05);  border-color:rgba(249,202,36,0.25);  color:#f9ca24; }
+  .r-pg   { background:rgba(108,99,255,0.08);  border-color:rgba(108,99,255,0.35);  color:#a99fff; }
+
+  /* GUARANTEES */
+  .guarantee-grid {
+    display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:20px;
+  }
+  .g-card {
+    background: var(--surface); border:1px solid var(--border); border-radius:16px; padding:28px;
+  }
+  .g-icon {
+    width:44px; height:44px; border-radius:12px;
+    display:flex; align-items:center; justify-content:center; font-size:22px; margin-bottom:16px;
+  }
+  .g-card h3 { font-size:15px; font-weight:700; margin-bottom:8px; }
+  .g-card p  { font-size:13px; color: var(--muted); line-height:1.6; }
+
+  /* CONSOLE */
+  .console-mock {
+    background: var(--surface); border:1px solid var(--border); border-radius:20px; overflow:hidden;
+  }
+  .console-bar {
+    background: var(--surface2); border-bottom:1px solid var(--border);
+    padding:12px 20px; display:flex; align-items:center; gap:10px;
+  }
+  .c-dots { display:flex; gap:6px; }
+  .c-dot  { width:11px; height:11px; border-radius:50%; }
+  .c-title { font-size:12px; color: var(--muted); margin-left:8px; }
+  .c-tabs  { margin-left:auto; display:flex; gap:4px; }
+  .c-tab   { padding:4px 14px; border-radius:7px; font-size:11px; font-weight:600; }
+  .c-tab.on { background:rgba(108,99,255,0.2); color:#a99fff; border:1px solid rgba(108,99,255,0.35); }
+  .c-tab.off { color: var(--muted); }
+  .console-body { padding:28px; }
+  .inc-row {
+    display:flex; align-items:center; gap:12px; padding:11px 14px;
+    background: var(--surface2); border:1px solid var(--border); border-radius:10px; margin-bottom:8px;
+  }
+  .sev { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+  .sev-crit { background:#ff3333; box-shadow:0 0 6px #ff3333; }
+  .sev-esc  { background:#ff9933; }
+  .sev-open { background:#3399ff; }
+  .sev-done { background:#33cc88; }
+  .inc-text { flex:1; }
+  .inc-title { font-size:13px; font-weight:600; }
+  .inc-meta  { font-size:10px; color: var(--muted); }
+  .inc-time  { font-size:11px; color: var(--muted); white-space:nowrap; }
+  .pills-row { display:flex; gap:8px; margin-top:16px; flex-wrap:wrap; }
+  .pill {
+    display:inline-block; border-radius:6px; padding:3px 10px;
+    font-size:11px; font-weight:700;
+  }
+  .p-red    { background:rgba(255,50,50,0.15);   color:#ff8888; }
+  .p-orange { background:rgba(255,150,0,0.15);   color:#ffaa55; }
+  .p-blue   { background:rgba(64,156,255,0.15);  color:#60a5fa; }
+  .p-green  { background:rgba(67,233,123,0.15);  color:#43e97b; }
+  .p-purple { background:rgba(108,99,255,0.18);  color:#a99fff; }
+
+  /* PRICING */
+  .pricing-row {
+    display:flex; gap:20px; flex-wrap:wrap; justify-content:center;
+  }
+  .price-card {
+    background: var(--surface); border:1.5px solid var(--border); border-radius:20px;
+    padding:36px 32px; min-width:240px; flex:1; max-width:320px; text-align:center;
+  }
+  .price-card.featured {
+    border-color: rgba(108,99,255,0.5);
+    background: rgba(108,99,255,0.06);
+  }
+  .price-tier { font-size:12px; text-transform:uppercase; letter-spacing:0.1em; color: var(--muted); margin-bottom:8px; }
+  .price-value {
+    font-size:48px; font-weight:900; letter-spacing:-0.04em;
+    background: var(--gradient); -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent; background-clip:text;
+    line-height:1; margin-bottom:4px;
+  }
+  .price-unit { font-size:13px; color: var(--muted); margin-bottom:24px; }
+  .price-features { list-style:none; text-align:left; margin-bottom:28px; }
+  .price-features li { font-size:13px; color:#ccccdd; padding:5px 0; padding-left:18px; position:relative; }
+  .price-features li::before { content:'âœ“'; position:absolute; left:0; color: var(--accent3); font-size:11px; font-weight:700; }
+  .price-cta {
+    display:block; padding:12px; border-radius:10px; font-size:13px; font-weight:700;
+    text-decoration:none; text-align:center;
+  }
+  .price-cta.primary { background: var(--gradient); color:#fff; }
+  .price-cta.secondary { border:1.5px solid var(--border); color: var(--muted); }
+
+  /* METRICS */
+  .metrics-strip {
+    display:grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr));
+    background: var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border);
+  }
+  .metric { padding:32px 20px; text-align:center; border-right:1px solid var(--border); }
+  .metric:last-child { border-right:none; }
+  .metric-val {
+    font-size:40px; font-weight:900; letter-spacing:-0.03em; line-height:1;
+    background: var(--gradient); -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:6px;
+  }
+  .metric-lbl { font-size:12px; color: var(--muted); }
+
+  /* TESTIMONIAL */
+  .testimonial {
+    background: var(--surface); border:1px solid var(--border); border-radius:20px;
+    padding:40px; max-width:700px; margin:0 auto;
+  }
+  .testimonial blockquote { font-size:18px; color:#ddddee; line-height:1.7; margin-bottom:20px; font-style:italic; }
+  .testimonial .author { display:flex; align-items:center; gap:14px; }
+  .testimonial .author-avatar {
+    width:40px; height:40px; border-radius:50%;
+    background:rgba(108,99,255,0.2); display:flex; align-items:center;
+    justify-content:center; font-size:16px; font-weight:800; color:#a99fff;
+  }
+  .testimonial .author-name { font-size:14px; font-weight:700; }
+  .testimonial .author-role { font-size:12px; color: var(--muted); }
+
+  /* FOOTER */
+  footer {
+    background: var(--surface); border-top:1px solid var(--border);
+    padding:60px 40px; text-align:center;
+  }
+  .footer-logo {
+    font-size:32px; font-weight:900; background: var(--gradient);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    margin-bottom:10px;
+  }
+  footer p { font-size:13px; color: var(--muted); margin-top:6px; }
+  footer a { color: var(--accent); text-decoration:none; }
+
+  @media (max-width:640px) {
+    section, .pain-section { padding:60px 20px; }
+    .feature-row, .feature-row.reverse { flex-direction:column; }
+    .hero { padding:60px 24px; }
+    .metrics-strip { grid-template-columns:1fr 1fr; }
+    .metric { border-right:none; border-bottom:1px solid var(--border); }
+  }
 </style>
 </head>
 <body>
 
-<nav id="nav">
-  <a href="#inicio" class="brand">NEXO</a>
-  <div class="navlinks" id="navlinks">
-    <a href="#desafio">El desafío</a>
-    <a href="#como-funciona">Cómo funciona</a>
-    <a href="#industrias">Industrias</a>
-    <a href="#monitoreo">Monitoreo</a>
-    <a href="#reporte">Reporte</a>
-    <a href="#arquitectura">Arquitectura</a>
-    <a href="#comparacion">Comparación</a>
-    <a href="#planes">Planes</a>
+<!-- â•â• HERO â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<div class="hero">
+  <div class="badge">ðŸ‡¨ðŸ‡± SoluciÃ³n para eventos en vivo Â· Chile</div>
+  <div class="hero-title">NEXO</div>
+  <div class="hero-tagline">El equipo coordinado. El evento sin sorpresas.</div>
+  <p class="hero-hook">
+    Tus tÃ©cnicos ya usan WhatsApp. NEXO convierte esos mensajes en
+    <strong>incidentes trazados, ruteados al responsable correcto y escalados automÃ¡ticamente</strong>
+    si no se resuelven a tiempo. Sin apps extra. Sin capacitaciÃ³n.
+  </p>
+  <div class="cta-row">
+    <a href="#contacto" class="cta-primary">Ver demo en vivo</a>
+    <a href="#como-funciona" class="cta-secondary">Â¿CÃ³mo funciona?</a>
   </div>
-  <a href="#contacto" class="nav-cta">Agendar demo</a>
-  <button class="burger" id="burger" aria-label="Menú">☰</button>
-</nav>
+</div>
 
-<!-- HERO / DESAFÍO -->
-<header class="hero" id="inicio">
-  <div class="wrap" id="desafio">
-    <span class="dossier">Dossier 2026</span>
-    <span class="eyebrow">El desafío operativo</span>
-    <h1>¿Cuántas horas pierde tu equipo coordinándose en grupos caóticos de WhatsApp?</h1>
-    <p class="intro">Grupos saturados, mensajes que se sepultan en segundos, llamadas cruzadas y el administrador o gerente teniendo que responder absolutamente todo. En el terreno, la comunicación informal cuesta dinero, tiempo y genera fallas operativas.</p>
-    <div class="quote"><p>"Tu equipo ya usa WhatsApp para hablar. Nosotros hacemos que ese WhatsApp trabaje para ti."</p></div>
-    <div class="whatis reveal">
-      <h3>¿Qué es <span>NEXO</span>?</h3>
-      <p>NEXO es un agente de Inteligencia Artificial que se instala en un número central de WhatsApp de tu empresa. No requiere que tu personal instale aplicaciones nuevas ni asista a capacitaciones. La IA entiende lenguaje natural, clasifica los reportes de incidentes en terreno, delega responsabilidades de manera privada a los encargados y escala alertas si no hay soluciones a tiempo.</p>
+<!-- â•â• MÃ‰TRICAS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<div class="metrics-strip">
+  <div class="metric">
+    <div class="metric-val">0</div>
+    <div class="metric-lbl">Apps extra para el equipo</div>
+  </div>
+  <div class="metric">
+    <div class="metric-val">&lt;30s</div>
+    <div class="metric-lbl">Del reporte al responsable</div>
+  </div>
+  <div class="metric">
+    <div class="metric-val">24/7</div>
+    <div class="metric-lbl">EscalaciÃ³n automÃ¡tica</div>
+  </div>
+  <div class="metric">
+    <div class="metric-val">100%</div>
+    <div class="metric-lbl">Trazabilidad del evento</div>
+  </div>
+</div>
+
+<!-- â•â• PROBLEMA â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<div class="pain-section">
+  <div class="eyebrow" style="color:#ff8888">El problema que todos conocen</div>
+  <h2>Los eventos se coordinan por WhatsApp.<br>Pero WhatsApp no coordina eventos.</h2>
+  <div class="pain-grid">
+    <div class="pain-card">
+      <div class="pain-icon">ðŸŒŠ</div>
+      <h3>El chat se inunda</h3>
+      <p>Un incidente real se pierde entre "ok", "lleguÃ©" y fotos del after. Nadie sabe quÃ© estÃ¡ resuelto y quÃ© no.</p>
     </div>
-    <div class="stats reveal">
-      <div class="stat"><div class="num">0</div><div class="lab">Apps nuevas que instalar</div></div>
-      <div class="stat"><div class="num">&lt;30s</div><div class="lab">Del reporte al encargado</div></div>
-      <div class="stat"><div class="num">100%</div><div class="lab">Registrado automáticamente</div></div>
+    <div class="pain-card">
+      <div class="pain-icon">ðŸ¤·</div>
+      <h3>Â¿QuiÃ©n vio el mensaje?</h3>
+      <p>El tÃ©cnico reportÃ³ el problema. Â¿Lo vio el encargado? Â¿QuiÃ©n lo estÃ¡ atendiendo? El silencio no confirma nada.</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">â³</div>
+      <h3>El tiempo corre sin que nadie actÃºe</h3>
+      <p>Sin escalaciÃ³n automÃ¡tica, un problema menor puede crecer 30 minutos antes de que producciÃ³n se entere.</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">ðŸ“­</div>
+      <h3>El post-evento es un misterio</h3>
+      <p>Â¿CuÃ¡ntos incidentes hubo? Â¿En quÃ© Ã¡rea? Â¿CuÃ¡nto tardaron? Nadie tiene esa informaciÃ³n â€” estÃ¡ repartida en chats.</p>
     </div>
   </div>
-</header>
+</div>
 
-<!-- CÓMO FUNCIONA -->
-<section class="block" id="como-funciona">
-  <div class="wrap">
-    <div class="head reveal">
-      <span class="eyebrow">Arquitectura de trabajo</span>
-      <h2><span class="lead-gold">Cómo funciona:</span> de un mensaje a una solución</h2>
+<hr class="divider">
+
+<!-- â•â• CÃ“MO FUNCIONA â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<section id="como-funciona">
+  <div class="eyebrow">La soluciÃ³n</div>
+  <h2>NEXO trabaja dentro de WhatsApp.<br>Tu equipo no cambia nada.</h2>
+  <p class="section-desc">
+    Un nÃºmero de WhatsApp central recibe los mensajes del equipo tÃ©cnico
+    y hace todo el trabajo de coordinaciÃ³n en el fondo.
+  </p>
+
+  <!-- Feature 1: Reporte -->
+  <div class="feature-row">
+    <div class="feature-text">
+      <h3>Cualquier problema llega al responsable correcto â€” de inmediato</h3>
+      <p>
+        El tÃ©cnico describe el problema en lenguaje normal, como le escribirÃ­a a un compaÃ±ero.
+        NEXO entiende de quÃ© Ã¡rea es, lo registra con un ID Ãºnico y lo envÃ­a al encargado
+        correspondiente en segundos.
+      </p>
+      <div class="feature-benefit">
+        <div class="dot" style="background:rgba(67,233,123,0.2); color:#43e97b">âœ“</div>
+        Sin formularios ni comandos especiales â€” texto libre en espaÃ±ol
+      </div>
+      <div class="feature-benefit">
+        <div class="dot" style="background:rgba(67,233,123,0.2); color:#43e97b">âœ“</div>
+        Fotos y audios reenviados al encargado automÃ¡ticamente
+      </div>
+      <div class="feature-benefit">
+        <div class="dot" style="background:rgba(67,233,123,0.2); color:#43e97b">âœ“</div>
+        Si no hay encargado disponible, el mensaje llega directo a ProducciÃ³n
+      </div>
     </div>
-    <div class="pasos reveal">
-      <div class="paso"><div class="pn">Paso 1</div><h4>El equipo reporta</h4><p>Escriben al número central, sin comandos rígidos.</p></div>
-      <div class="paso"><div class="pn">Paso 2</div><h4>La IA enruta</h4><p>Categoriza el área e identifica al encargado directo.</p></div>
-      <div class="paso"><div class="pn">Paso 3</div><h4>El encargado resuelve</h4><p>Actúa y confirma la solución desde su propio chat.</p></div>
-      <div class="paso"><div class="pn">Paso 4</div><h4>Escalación autónoma</h4><p>Si no hay respuesta, la alerta escala directo al superior.</p></div>
+    <div class="feature-visual">
+      <div class="wa-mock">
+        <div class="wa-top">
+          <div class="wa-avatar" style="background:rgba(64,156,255,0.2);color:#60a5fa">CM</div>
+          <div><div class="wa-name">Carlos Mendoza</div><div class="wa-role">TÃ©cnico Â· Sonido</div></div>
+        </div>
+        <div class="wa-body">
+          <div class="wa-msg sent">el micro del escenario principal tiene ruido en el canal 3, ya lo revisÃ© y persiste<div class="wa-time">21:14</div></div>
+          <div class="wa-msg recv">âœ… Entendido. AvisÃ© a Diego Soto (encargado de Sonido). Te aviso cuando lo resuelvan.<div class="wa-time">21:14</div></div>
+        </div>
+      </div>
     </div>
-    <div class="caso reveal">
-      <div class="ctitle">Caso de éxito base: <b>Producción de eventos</b></div>
-      <div class="cols">
-        <div class="col">
-          <div class="clab">Línea técnico · Carlos Mendoza</div>
-          <div class="stream">
-            <div class="bub out">hola, carlos mendoza, sonido</div>
-            <div class="bub in">¡Bienvenido, Carlos! Registrado en sonido.</div>
-            <div class="bub out">el micrófono del escenario no funciona</div>
-            <div class="bub in">Entendido. Avisé a Diego (encargado). <span class="id">ID: INC-8K8A</span></div>
-            <div class="bub res"><b>✓ Resuelto:</b> Diego reemplazó el cable XLR del canal 3.</div>
+  </div>
+
+  <!-- Feature 2: EscalaciÃ³n -->
+  <div class="feature-row reverse">
+    <div class="feature-text">
+      <h3>Si nadie actÃºa, el sistema escala solo â€” sin que producciÃ³n tenga que preguntar</h3>
+      <p>
+        NEXO monitorea cada incidente en tiempo real. Si el encargado no resuelve dentro del
+        plazo acordado, envÃ­a recordatorios automÃ¡ticos y escala el problema a ProducciÃ³n
+        General con toda la informaciÃ³n. Nunca pierde el hilo aunque el servidor se reinicie.
+      </p>
+      <div class="feature-benefit">
+        <div class="dot" style="background:rgba(255,107,107,0.2); color:#ff9f9f">âœ“</div>
+        2 recordatorios progresivos antes de escalar
+      </div>
+      <div class="feature-benefit">
+        <div class="dot" style="background:rgba(255,107,107,0.2); color:#ff9f9f">âœ“</div>
+        EscalaciÃ³n a ProducciÃ³n si se supera el plazo configurado
+      </div>
+      <div class="feature-benefit">
+        <div class="dot" style="background:rgba(255,107,107,0.2); color:#ff9f9f">âœ“</div>
+        Alerta crÃ­tica si el incidente escala y sigue sin resolverse
+      </div>
+    </div>
+    <div class="feature-visual">
+      <div class="esc-visual">
+        <div class="esc-title">Estado de un incidente en el tiempo</div>
+        <div class="esc-steps">
+          <div class="esc-step step-open">
+            <div class="esc-step-icon">ðŸ“</div>
+            <div class="esc-step-info">
+              <div class="esc-step-name">Registrado</div>
+              <div class="esc-step-desc">Encargado notificado al instante</div>
+            </div>
+            <div class="esc-step-time">t = 0</div>
+          </div>
+          <div class="esc-arrow-down">â†“</div>
+          <div class="esc-step step-rec">
+            <div class="esc-step-icon">â°</div>
+            <div class="esc-step-info">
+              <div class="esc-step-name">Recordatorio</div>
+              <div class="esc-step-desc">Aviso automÃ¡tico al encargado</div>
+            </div>
+            <div class="esc-step-time">sin respuesta</div>
+          </div>
+          <div class="esc-arrow-down">â†“</div>
+          <div class="esc-step step-esc">
+            <div class="esc-step-icon">âš ï¸</div>
+            <div class="esc-step-info">
+              <div class="esc-step-name">Escalado a ProducciÃ³n</div>
+              <div class="esc-step-desc">Alerta directa al productor general</div>
+            </div>
+            <div class="esc-step-time">sin resoluciÃ³n</div>
+          </div>
+          <div class="esc-arrow-down">â†“</div>
+          <div class="esc-step step-done">
+            <div class="esc-step-icon">âœ…</div>
+            <div class="esc-step-info">
+              <div class="esc-step-name">Resuelto</div>
+              <div class="esc-step-desc">NotificaciÃ³n a quien lo reportÃ³</div>
+            </div>
+            <div class="esc-step-time">cerrado</div>
           </div>
         </div>
-        <div class="col">
-          <div class="clab">Línea encargado · Diego Ramírez</div>
-          <div class="stream">
-            <div class="bub in">📢 Problema en sonido: el micrófono del escenario no funciona. Reportado por Carlos. <span class="id">ID: INC-8K8A</span></div>
-            <div class="bub out">revisando ahora</div>
-            <div class="bub out">resuelto, reemplacé el cable XLR del canal 3</div>
-            <div class="bub in">Perfecto, registré la resolución. Carlos fue notificado.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature 3: Consola -->
+  <div class="feature-row">
+    <div class="feature-text">
+      <h3>ProducciÃ³n ve todo el evento en una pantalla</h3>
+      <p>
+        Una consola web muestra en tiempo real cada incidente activo, su estado, el tiempo
+        transcurrido y quiÃ©n lo estÃ¡ atendiendo. TambiÃ©n gestiona el equipo: aprobaciones,
+        historial de conversaciÃ³n por miembro y un feed de actividad del evento.
+      </p>
+      <div class="feature-benefit">
+        <div class="dot" style="background:rgba(108,99,255,0.2); color:#a99fff">âœ“</div>
+        Polling automÃ¡tico cada 5 segundos â€” siempre actualizado
+      </div>
+      <div class="feature-benefit">
+        <div class="dot" style="background:rgba(108,99,255,0.2); color:#a99fff">âœ“</div>
+        Los crÃ­ticos siempre arriba, con alerta visual
+      </div>
+      <div class="feature-benefit">
+        <div class="dot" style="background:rgba(108,99,255,0.2); color:#a99fff">âœ“</div>
+        Acceso protegido con usuario y contraseÃ±a
+      </div>
+    </div>
+    <div class="feature-visual">
+      <div class="console-mock">
+        <div class="console-bar">
+          <div class="c-dots">
+            <div class="c-dot" style="background:#ff5f57"></div>
+            <div class="c-dot" style="background:#ffbd2e"></div>
+            <div class="c-dot" style="background:#28c840"></div>
+          </div>
+          <span class="c-title">NEXO Â· Consola</span>
+          <div class="c-tabs">
+            <div class="c-tab on">ðŸ“‹ Incidentes</div>
+            <div class="c-tab off">ðŸ‘¥ Equipo</div>
+            <div class="c-tab off">ðŸ“¡ Actividad</div>
+          </div>
+        </div>
+        <div class="console-body">
+          <div class="inc-row">
+            <div class="sev sev-crit"></div>
+            <div class="inc-text">
+              <div class="inc-title">ðŸ”´ Corte elÃ©ctrico en camarines</div>
+              <div class="inc-meta">seguridad Â· escalado_critico</div>
+            </div>
+            <div class="inc-time">47 min</div>
+          </div>
+          <div class="inc-row">
+            <div class="sev sev-esc"></div>
+            <div class="inc-text">
+              <div class="inc-title">Retorno IEM falla canal 7</div>
+              <div class="inc-meta">sonido Â· escalado a ProducciÃ³n</div>
+            </div>
+            <div class="inc-time">22 min</div>
+          </div>
+          <div class="inc-row">
+            <div class="sev sev-open"></div>
+            <div class="inc-text">
+              <div class="inc-title">Seguidor de luz sin respuesta</div>
+              <div class="inc-meta">iluminacion Â· en atenciÃ³n</div>
+            </div>
+            <div class="inc-time">4 min</div>
+          </div>
+          <div class="inc-row">
+            <div class="sev sev-done"></div>
+            <div class="inc-text">
+              <div class="inc-title">âœ… Ruido en micrÃ³fono principal</div>
+              <div class="inc-meta">sonido Â· resuelto en 8 min</div>
+            </div>
+            <div class="inc-time">hace 1h</div>
+          </div>
+          <div class="pills-row">
+            <span class="pill p-red">1 crÃ­tico</span>
+            <span class="pill p-orange">1 escalado</span>
+            <span class="pill p-blue">1 activo</span>
+            <span class="pill p-green">1 resuelto</span>
           </div>
         </div>
       </div>
     </div>
   </div>
-</section>
 
-<!-- INDUSTRIAS -->
-<section class="block" id="industrias">
-  <div class="wrap">
-    <div class="head reveal">
-      <span class="eyebrow">Distintas industrias</span>
-      <h2>El mismo sistema. <span class="lead-gold">Adaptado a tu rubro.</span></h2>
-      <p>Toca un rubro para ver un reporte real, cómo NEXO lo enruta y cómo se resuelve.</p>
-    </div>
-    <div class="tabs reveal" id="tabs"></div>
-    <div class="ind-panel reveal" id="indPanel"></div>
-  </div>
-</section>
-
-<!-- MONITOREO -->
-<section class="block" id="monitoreo">
-  <div class="wrap">
-    <div class="head reveal">
-      <span class="eyebrow">Control central</span>
-      <h2>Consola de monitoreo en vivo</h2>
-      <p>Tú ves todo desde un panel central: cada mensaje capturado en terreno, a quién se enrutó y con qué prioridad. Trazabilidad completa, ininterrumpida.</p>
-    </div>
-
-    <!-- screenshot: dashboard -->
-    <div class="shot reveal">
-      <div class="shot-bar">
-        <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
-        <span class="urlbar">panel.nexo.cl/evento/lollapalooza-2026</span>
+  <!-- Feature 4: Reporte -->
+  <div class="feature-row reverse">
+    <div class="feature-text">
+      <h3>Al terminar el evento, el reporte ya estÃ¡ hecho</h3>
+      <p>
+        Con un mensaje, el Productor General recibe el resumen completo: total de incidentes,
+        cuÃ¡ntos se resolvieron, tiempo promedio de resoluciÃ³n por Ã¡rea, y los detalles de
+        cada caso. Todo exportable a planilla y PDF.
+      </p>
+      <div class="feature-benefit">
+        <div class="dot" style="background:rgba(67,233,123,0.2); color:#43e97b">âœ“</div>
+        MÃ©tricas por Ã¡rea: sonido, iluminaciÃ³n, seguridad, catering
       </div>
-      <div class="shot-body">
-        <div class="dash-head">
-          <div>
-            <div class="dash-title">Evento · Lollapalooza 2026</div>
-            <div class="dash-sub">Equipo en terreno: 24 personas · 6 áreas</div>
-          </div>
-          <span class="live"><span class="lpulse"></span>EN VIVO</span>
+      <div class="feature-benefit">
+        <div class="dot" style="background:rgba(67,233,123,0.2); color:#43e97b">âœ“</div>
+        Tiempos reales de respuesta y resoluciÃ³n
+      </div>
+      <div class="feature-benefit">
+        <div class="dot" style="background:rgba(67,233,123,0.2); color:#43e97b">âœ“</div>
+        Export a Google Sheets y PDF con un solo comando
+      </div>
+    </div>
+    <div class="feature-visual">
+      <div class="wa-mock">
+        <div class="wa-top">
+          <div class="wa-avatar" style="background:rgba(249,202,36,0.2);color:#f9ca24">RI</div>
+          <div><div class="wa-name">Roberto Iglesias</div><div class="wa-role">Productor General</div></div>
         </div>
-        <div class="metrics">
-          <div class="metric"><div class="mv">17</div><div class="ml">Incidentes hoy</div></div>
-          <div class="metric"><div class="mv ok">14</div><div class="ml">Resueltos</div></div>
-          <div class="metric"><div class="mv pend">2</div><div class="ml">En curso</div></div>
-          <div class="metric"><div class="mv urg">1</div><div class="ml">Urgente</div></div>
-          <div class="metric"><div class="mv">2m 40s</div><div class="ml">Resp. promedio</div></div>
-        </div>
-        <table class="ctable">
-          <thead><tr><th>Origen</th><th>Mensaje capturado</th><th>Acción</th><th>Estado</th></tr></thead>
-          <tbody>
-            <tr><td class="src">Carlos Mendoza</td><td class="msg">"micro del escenario no funciona"</td><td class="act">→ Diego <span class="id">INC-8K8A</span></td><td><span class="pill ok">Resuelto</span></td></tr>
-            <tr><td class="src">María González</td><td class="msg">"no hay llave en la caja"</td><td class="act">→ Fernanda <span class="id">INC-PRV01</span></td><td><span class="pill ok">Resuelto</span></td></tr>
-            <tr class="warn"><td class="src">⚠ Rodrigo Vega</td><td class="msg">"se acaban los canapés de salmón"</td><td class="act">→ Patricia <span class="id">INC-BNQ07</span></td><td><span class="pill urg">Urgente</span></td></tr>
-            <tr><td class="src">Lucas Soto</td><td class="msg">"falta agua en camarines"</td><td class="act">→ Producción <span class="id">INC-PRD33</span></td><td><span class="pill pend">En curso</span></td></tr>
-            <tr><td class="src">Ana Rivas</td><td class="msg">"luz del sector B parpadeando"</td><td class="act">→ Iluminación <span class="id">INC-ILU12</span></td><td><span class="pill pend">En curso</span></td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <p class="shot-note">Vista representativa del panel · los datos se actualizan en tiempo real durante el evento.</p>
-  </div>
-</section>
-
-<!-- REPORTE FINAL -->
-<section class="block reporte" id="reporte">
-  <div class="wrap">
-    <div class="head reveal">
-      <span class="eyebrow">Al cerrar el evento</span>
-      <h2>Un reporte completo, <span class="lead-gold">listo para entregar</span></h2>
-      <p>Cuando termina el evento, NEXO consolida todo lo registrado y lo vuelca a una planilla de Google Sheets o Excel: cada incidente, quién lo reportó, a quién se asignó, los tiempos y la resolución. El cliente recibe el reporte sin que nadie arme nada a mano.</p>
-    </div>
-
-    <!-- screenshot: planilla -->
-    <div class="shot reveal">
-      <div class="shot-bar sheets">
-        <span class="sheets-ic">📊</span>
-        <span class="sheets-name">Reporte_Lollapalooza_2026.xlsx</span>
-        <span class="sheets-tag">Exportado automáticamente</span>
-      </div>
-      <div class="sheet-wrap">
-        <table class="sheet">
-          <thead>
-            <tr><th class="rownum"></th><th>ID</th><th>Área</th><th>Reporte</th><th>Reportó</th><th>Asignado</th><th>Resolución</th><th>Tiempo</th><th>Estado</th></tr>
-          </thead>
-          <tbody>
-            <tr><td class="rownum">1</td><td class="mono">INC-8K8A</td><td>Sonido</td><td>Micrófono escenario sin señal</td><td>C. Mendoza</td><td>D. Ramírez</td><td>Reemplazo cable XLR canal 3</td><td>3m 10s</td><td><span class="pill ok">Resuelto</span></td></tr>
-            <tr><td class="rownum">2</td><td class="mono">INC-PRV01</td><td>Accesos</td><td>Sin llave en caja fuerte</td><td>M. González</td><td>F. Lazo</td><td>Llave en portería del edificio</td><td>1m 55s</td><td><span class="pill ok">Resuelto</span></td></tr>
-            <tr><td class="rownum">3</td><td class="mono">INC-BNQ07</td><td>Catering</td><td>Quiebre de stock canapés</td><td>R. Vega</td><td>P. Núñez</td><td>Bandeja de reserva liberada</td><td>4m 20s</td><td><span class="pill ok">Resuelto</span></td></tr>
-            <tr><td class="rownum">4</td><td class="mono">INC-PRD33</td><td>Producción</td><td>Falta agua en camarines</td><td>L. Soto</td><td>Producción</td><td>—</td><td>en curso</td><td><span class="pill pend">En curso</span></td></tr>
-            <tr><td class="rownum">5</td><td class="mono">INC-ILU12</td><td>Iluminación</td><td>Luz sector B parpadeando</td><td>A. Rivas</td><td>Iluminación</td><td>—</td><td>en curso</td><td><span class="pill pend">En curso</span></td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="rep-points reveal">
-      <div class="rp"><span class="rpi">🧾</span><span>Cada incidente con su responsable, tiempos y resolución</span></div>
-      <div class="rp"><span class="rpi">⏱</span><span>Tiempos de respuesta y resolución calculados solos</span></div>
-      <div class="rp"><span class="rpi">📤</span><span>Se entrega en Google Sheets o se descarga en Excel</span></div>
-    </div>
-  </div>
-</section>
-
-<!-- ARQUITECTURA -->
-<section class="block" id="arquitectura">
-  <div class="wrap">
-    <div class="head reveal">
-      <span class="eyebrow">Bajo el capó</span>
-      <h2>Infraestructura <span class="lead-gold">a prueba de terreno</span></h2>
-      <p>El miedo de toda operación es que la herramienta se caiga en el peor momento. NEXO está diseñado al revés: asume que la red va a fallar y se protege por capas.</p>
-    </div>
-
-    <div class="arch reveal">
-      <!-- entrada -->
-      <div class="arch-end">
-        <span class="ae-ic">💬</span>
-        <span class="ae-t">WhatsApp del equipo</span>
-        <span class="ae-s">reportes en terreno</span>
-      </div>
-      <div class="arch-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12h16M14 6l6 6-6 6"/></svg></div>
-
-      <!-- contenedor -->
-      <div class="arch-core">
-        <span class="core-tag">NEXO · contenedor Docker aislado por cliente</span>
-        <div class="core-pipe">
-          <div class="pnode"><span class="pi">🧠</span><b>Motor IA</b><small>entiende y enruta</small></div>
-          <div class="pconn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12h16M14 6l6 6-6 6"/></svg></div>
-          <div class="pnode hl"><span class="pi">🗄</span><b>Base de datos SQLite</b><small>local · fuente de verdad · registra primero</small></div>
-          <div class="pconn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12h16M14 6l6 6-6 6"/></svg></div>
-          <div class="pnode"><span class="pi">🔁</span><b>Cola con reintentos</b><small>nada se pierde</small></div>
+        <div class="wa-body">
+          <div class="wa-msg sent">reporte final del evento<div class="wa-time">23:58</div></div>
+          <div class="wa-msg recv">ðŸ“Š Reporte del evento<br><br>Total incidentes: 12<br>Resueltos: 11 âœ… Â· Activos: 1 âš ï¸<br>Tiempo promedio: 8 min<br><br>ðŸ”Š SONIDO â€” 4 incidentes, todos resueltos âœ…<br>ðŸ’¡ ILUMINACIÃ“N â€” 3 incidentes, 3 resueltos âœ…<br>ðŸ”’ SEGURIDAD â€” 3 incidentes, 2 resueltos âš ï¸<br>ðŸ½ CATERING â€” 2 incidentes, todos resueltos âœ…<br><br>ðŸ“‹ Exportando a planilla...<div class="wa-time">23:58</div></div>
         </div>
       </div>
-
-      <div class="arch-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12h16M14 6l6 6-6 6"/></svg></div>
-      <!-- salida -->
-      <div class="arch-end">
-        <span class="ae-ic">📊</span>
-        <span class="ae-t">Google Sheets + panel cliente</span>
-        <span class="ae-s">espejo en la nube · sincroniza cuando hay red</span>
-      </div>
     </div>
+  </div>
 
-    <div class="guarantees reveal">
-      <div class="grt">
-        <span class="gi">📥</span>
-        <h4>Registra primero</h4>
-        <p>Cada mensaje se guarda en la base de datos antes de procesarse. Si algo falla después, el dato ya está a salvo.</p>
-      </div>
-      <div class="grt">
-        <span class="gi">🔁</span>
-        <h4>Cola con reintentos</h4>
-        <p>Si se corta la red o un servicio no responde, la acción no se pierde: se reintenta sola hasta completarse.</p>
-      </div>
-      <div class="grt">
-        <span class="gi">📦</span>
-        <h4>Aislamiento por cliente</h4>
-        <p>Cada empresa corre en su propio contenedor. Una falla en una operación nunca afecta a otra.</p>
-      </div>
-      <div class="grt">
-        <span class="gi">♻️</span>
-        <h4>Se recupera solo</h4>
-        <p>Si el sistema se reinicia, vuelve con el estado exacto: las tareas y los tiempos de escalación siguen donde estaban.</p>
-      </div>
+</section>
+
+<hr class="divider">
+
+<!-- â•â• ROLES â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<section>
+  <div class="eyebrow">Para todo el equipo</div>
+  <h2>Cada persona ve lo que necesita.<br>Solo lo que necesita.</h2>
+  <p class="section-desc">
+    NEXO adapta las funciones disponibles al rol de cada persona automÃ¡ticamente.
+  </p>
+  <div class="roles-row">
+    <div class="role-card r-tec">
+      <div class="role-icon">ðŸ”§</div>
+      <div class="role-name">TÃ©cnico</div>
+      <div class="role-desc">Reporta problemas y confirma resoluciones. NEXO se encarga del resto: enrutar, registrar y escalar.</div>
+    </div>
+    <div class="role-card r-enc">
+      <div class="role-icon">ðŸ‘·</div>
+      <div class="role-name">Encargado de Ãrea</div>
+      <div class="role-desc">Recibe alertas de su Ã¡rea, asigna tareas a su equipo, aprueba el ingreso de nuevos tÃ©cnicos.</div>
+    </div>
+    <div class="role-card r-prod">
+      <div class="role-icon">ðŸŽ¬</div>
+      <div class="role-name">Productor</div>
+      <div class="role-desc">VisiÃ³n transversal de todas las Ã¡reas. Puede intervenir en cualquier incidente y coordinar a todo el equipo.</div>
+    </div>
+    <div class="role-card r-pg">
+      <div class="role-icon">â­</div>
+      <div class="role-name">Productor General</div>
+      <div class="role-desc">Recibe todas las escalaciones automÃ¡ticas, tiene control total y genera el reporte final del evento.</div>
     </div>
   </div>
 </section>
 
-<!-- COMPARACIÓN -->
-<section class="block" id="comparacion">
-  <div class="wrap">
-    <div class="head reveal">
-      <span class="eyebrow">Propuesta comercial</span>
-      <h2>¿Por qué NEXO frente a alternativas convencionales?</h2>
+<hr class="divider">
+
+<!-- â•â• GARANTÃAS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<section>
+  <div class="eyebrow">Construido para el directo</div>
+  <h2>Funciona aunque falle la conexiÃ³n.<br>Nunca pierde un incidente.</h2>
+  <p class="section-desc">
+    Los eventos en vivo no tienen segunda oportunidad. NEXO fue diseÃ±ado para
+    seguir operando incluso cuando algo sale mal en la infraestructura.
+  </p>
+  <div class="guarantee-grid">
+
+    <div class="g-card">
+      <div class="g-icon" style="background:rgba(249,202,36,0.1)">ðŸ’¾</div>
+      <h3>Sin pÃ©rdida de datos</h3>
+      <p>Cada incidente se guarda localmente antes de cualquier operaciÃ³n en la nube. Si la conexiÃ³n se corta, no se pierde nada.</p>
     </div>
-    <div class="reveal" style="overflow-x:auto">
-      <table class="cmp">
-        <thead><tr><th>Característica</th><th class="nexo">NEXO IA</th><th>Grupos WhatsApp</th><th>Slack / Teams</th></tr></thead>
-        <tbody>
-          <tr><td class="feat">¿Requiere instalar apps nuevas?</td><td class="nexocell yes">No · usa WhatsApp</td><td class="no">No</td><td class="warn">⚠ Sí · alta resistencia</td></tr>
-          <tr><td class="feat">Enrutamiento automático</td><td class="nexocell yes">✓ Sí · por área</td><td class="no">✗ No · caos grupal</td><td class="warn">⚠ Manual</td></tr>
-          <tr><td class="feat">Escalación autónoma de alertas</td><td class="nexocell yes">✓ Sí · al jefe directo</td><td class="no">✗ No</td><td class="no">✗ No</td></tr>
-          <tr><td class="feat">Bitácora automática en vivo</td><td class="nexocell yes">✓ Sí · registro central</td><td class="no">✗ No · mensajes perdidos</td><td class="warn">⚠ Parcial</td></tr>
-        </tbody>
-      </table>
+
+    <div class="g-card">
+      <div class="g-icon" style="background:rgba(67,233,123,0.1)">ðŸ”</div>
+      <h3>Reintentos automÃ¡ticos</h3>
+      <p>Si Google Sheets no responde, el sistema reintenta la sincronizaciÃ³n de forma automÃ¡tica cuando vuelve la conexiÃ³n.</p>
     </div>
+
+    <div class="g-card">
+      <div class="g-icon" style="background:rgba(108,99,255,0.1)">âš¡</div>
+      <h3>Opera sin internet de respaldo</h3>
+      <p>Si la IA no responde, reglas determinÃ­sticas mantienen vivo el camino crÃ­tico: reportar y resolver siempre funciona.</p>
+    </div>
+
+    <div class="g-card">
+      <div class="g-icon" style="background:rgba(255,107,107,0.1)">ðŸ›¡ï¸</div>
+      <h3>El SLA nunca se reinicia</h3>
+      <p>Si el servidor se reinicia, los temporizadores de escalaciÃ³n continÃºan exactamente donde iban â€” ningÃºn incidente "se olvida".</p>
+    </div>
+
+    <div class="g-card">
+      <div class="g-icon" style="background:rgba(64,156,255,0.1)">ðŸ”</div>
+      <h3>Acceso controlado</h3>
+      <p>El equipo necesita aprobaciÃ³n del encargado del Ã¡rea para activarse. Nadie opera sin estar validado. La consola web requiere login.</p>
+    </div>
+
+    <div class="g-card">
+      <div class="g-icon" style="background:rgba(200,100,255,0.1)">ðŸ“¡</div>
+      <h3>SincronizaciÃ³n bidireccional</h3>
+      <p>Google Sheets siempre tiene el espejo actualizado del evento: equipo, incidentes y estado en tiempo real, accesible desde cualquier dispositivo.</p>
+    </div>
+
   </div>
 </section>
 
-<!-- PLANES -->
-<section class="block" id="planes">
-  <div class="wrap">
-    <div class="head reveal" style="text-align:center">
-      <span class="eyebrow">Planes</span>
-      <h2>Elige cómo trabajar con NEXO</h2>
-    </div>
-    <div class="plan-grid">
-      <div class="plan reveal">
-        <div class="pk">Por evento único</div>
-        <div class="pv">Consultar valor</div>
-        <ul>
-          <li>Setup inicial y parametrización incluidos</li>
-          <li>Soporte técnico activo el día del evento</li>
-          <li>Hasta 50 personas en terreno coordinadas</li>
-          <li>Planilla final consolidada exportable</li>
-        </ul>
-        <button class="pbtn outline" data-goto="#contacto">Cotizar evento</button>
-      </div>
-      <div class="plan reco reveal">
-        <div class="pk">Suscripción mensual</div>
-        <div class="pv">Consultar valor</div>
-        <ul>
-          <li>Eventos, activaciones u operaciones ilimitadas</li>
-          <li>Configuración y flujos corporativos a medida</li>
-          <li>Cobertura de personas y staff ilimitada</li>
-          <li>Soporte y atención prioritaria continua</li>
-        </ul>
-        <button class="pbtn solid" data-goto="#contacto">Empezar ahora</button>
-      </div>
-    </div>
-  </div>
+<hr class="divider">
+
+<!-- â•â• DEMO CTA â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<section id="contacto" style="text-align:center">
+  <div class="eyebrow">PruÃ©balo sin costo</div>
+  <h2 style="margin-bottom:16px">30 minutos y lo ves funcionando<br>con tu equipo real.</h2>
+  <p class="section-desc" style="margin: 0 auto 40px">
+    Demo en vivo de todos los flujos, Q&amp;A con el equipo y configuraciÃ³n
+    adaptada a tu evento â€” sin compromiso.
+  </p>
+  <a href="mailto:robeigles@gmail.com" class="cta-primary" style="display:inline-block; text-decoration:none;">
+    Agendar demo gratuita
+  </a>
 </section>
 
-<!-- CONTACTO -->
-<section class="block contact" id="contacto">
-  <div class="wrap">
-    <div class="contact-box reveal">
-      <span class="eyebrow">¿Tu empresa tiene un problema parecido?</span>
-      <h2 style="margin-top:14px">Agenda una demo en vivo</h2>
-      <p>NEXO se adapta a tu flujo operativo en menos de una semana. Te mostramos cómo funciona, sin compromiso.</p>
-      <div class="contact-actions">
-        <a href="mailto:robeigles@gmail.com" class="ca mail">✉ robeigles@gmail.com</a>
-        <a href="https://wa.me/56968448511" class="ca wa" target="_blank" rel="noopener">Demo directo en tu WhatsApp</a>
-      </div>
-    </div>
-  </div>
-</section>
-
+<!-- â•â• FOOTER â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
 <footer>
-  <div class="wrap foot">
-    <span class="fl">NEXO — Santiago, Chile</span>
-    <span class="fr">Powered by Claude AI</span>
-  </div>
+  <div class="footer-logo">NEXO</div>
+  <p>CoordinaciÃ³n de Eventos en Vivo Â· Chile</p>
+  <p style="margin-top:10px"><a href="mailto:robeigles@gmail.com">robeigles@gmail.com</a></p>
+  <p style="margin-top:20px; font-size:11px">
+    Â© 2025 NEXO â€” Todos los derechos reservados
+  </p>
 </footer>
 
-<script>
-  // ---- Industrias data ----
-  const INDUSTRIAS = [
-    {key:'eventos', ic:'🎤', label:'Eventos', name:'Técnico · Carlos Mendoza', msgs:[
-      {f:'out',t:'el micrófono del escenario no funciona'},
-      {f:'in',t:'Entendido. Avisé a Diego (encargado).',id:'INC-8K8A'}],
-      res:'Diego reemplazó el cable XLR del canal 3. Carlos fue notificado.'},
-    {key:'corredoras', ic:'🏠', label:'Corredoras', name:'Agente · María González', msgs:[
-      {f:'out',t:'llegué al depto de Providencia y no hay llave en la caja'},
-      {f:'in',t:'Avisé a Fernanda (coordinación).',id:'INC-PRV01'},
-      {f:'out',t:'y el cliente llega en 15 minutos'}],
-      res:'La llave está en portería del edificio, pídela a nombre de la corredora.'},
-    {key:'banqueteria', ic:'🍽', label:'Banquetería', name:'Staff · Rodrigo Vega', urgent:true, msgs:[
-      {f:'out',t:'se están acabando los canapés de salmón y hay como 80 personas esperando'},
-      {f:'in',urgent:true,t:'Urgente. Avisé a Patricia (cocina).',id:'INC-BNQ07'},
-      {f:'out',t:'(cocina) ya lo vi, teníamos reserva, están saliendo ahora'}],
-      res:'Primera bandeja sale en 8 minutos. Patricia lo confirmó.'},
-    {key:'gimnasios', ic:'💪', label:'Gimnasios', name:'Recepción · Lucas', msgs:[
-      {f:'out',t:'la caminadora 3 se detuvo sola y hace un ruido raro, hay un socio esperando'},
-      {f:'in',t:'Avisé a Miguel (mantención).',id:'INC-GYM14'},
-      {f:'out',t:'(mantención) la revisé en remoto, es el sensor, la puse en modo seguro'}],
-      res:'Máquina en modo seguro. Técnico llega mañana. Usa caminadora 5.'},
-    {key:'construccion', ic:'🏗', label:'Construcción', name:'Obrero · Faena', msgs:[
-      {f:'out',t:'nos quedamos sin cemento en el piso 4, no podemos seguir'},
-      {f:'in',t:'Avisé a Rodrigo (jefe de obra).',id:'INC-OBR12'},
-      {f:'out',t:'(jefe de obra) llamé al proveedor, llegan en 20 min'}],
-      res:'Camión de cemento llega en 20 min. Rodrigo lo confirmó.'},
-    {key:'retail', ic:'🛍', label:'Retail', name:'Vendedor · Sala', msgs:[
-      {f:'out',t:'se agotó la zapatilla Nike talla 42 y hay 3 clientes esperando'},
-      {f:'in',t:'Avisé a Felipe (bodega).',id:'INC-RTL05'},
-      {f:'out',t:'(bodega) tengo 6 pares acá, los llevo ya'}],
-      res:'6 pares disponibles en bodega. Felipe los trae ahora.'},
-    {key:'logistica', ic:'🚚', label:'Logística', name:'Chofer · Ruta 5', urgent:true, msgs:[
-      {f:'out',t:'camión con falla en frenos a la altura del km 45, no puedo seguir'},
-      {f:'in',urgent:true,t:'Urgente. Avisé a Sandra (coordinadora).',id:'INC-TRN22'},
-      {f:'out',t:'(coordinadora) llamé a grúa, llega en 35 min, reasigné carga al camión 7'}],
-      res:'Grúa en camino. Carga reasignada a camión 7.'},
-    {key:'clinica', ic:'🏥', label:'Clínica', name:'Enfermera · Piso 3', msgs:[
-      {f:'out',t:'sin guantes de nitrilo talla M, necesitamos urgente para los procedimientos'},
-      {f:'in',t:'Avisé a Carmen (abastecimiento).',id:'INC-CLN06'},
-      {f:'out',t:'(abastecimiento) tengo stock en bodega, subo 3 cajas ahora mismo'}],
-      res:'3 cajas subiendo en 5 minutos. Carmen lo confirmó.'},
-    {key:'seguridad', ic:'🔒', label:'Seguridad', name:'Guardia · Sector C', urgent:true, msgs:[
-      {f:'out',t:'persona sospechosa rondando el estacionamiento sector C'},
-      {f:'in',urgent:true,t:'Urgente. Avisé a Marcelo (supervisor).',id:'INC-SEG08'},
-      {f:'out',t:'(supervisor) enviando patrulla ahora, llegarán en 2 min'}],
-      res:'Patrulla desplegada. Incidente registrado con prioridad alta.'},
-  ];
-
-  const tabsEl = document.getElementById('tabs');
-  const panelEl = document.getElementById('indPanel');
-
-  function renderIndustria(d){
-    const bubs = d.msgs.map(m=>{
-      const cls = 'bub '+(m.f)+(m.urgent?' urgent':'');
-      const flag = m.urgent?'<span class="uflag">🚨 </span>':'';
-      const id = m.id?` <span class="id">ID: ${m.id}</span>`:'';
-      return `<div class="${cls}">${flag}${m.t}${id}</div>`;
-    }).join('');
-    panelEl.innerHTML = `
-      <div class="ihead"><span class="ic">${d.ic}</span><h3>${d.label}</h3></div>
-      <div class="who">${d.name}</div>
-      <div class="stream">${bubs}
-        <div class="bub res"><b>✓ Resolución:</b> ${d.res}</div>
-      </div>`;
-    panelEl.classList.remove('fade-swap'); void panelEl.offsetWidth; panelEl.classList.add('fade-swap');
-  }
-
-  INDUSTRIAS.forEach((d,i)=>{
-    const b = document.createElement('button');
-    b.className = 'tab'+(i===0?' active':'');
-    b.innerHTML = `<span class="ti">${d.ic}</span>${d.label}`;
-    b.addEventListener('click',()=>{
-      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-      b.classList.add('active');
-      renderIndustria(d);
-    });
-    tabsEl.appendChild(b);
-  });
-  renderIndustria(INDUSTRIAS[0]);
-
-  // ---- Plan / goto buttons ----
-  document.querySelectorAll('[data-goto]').forEach(b=>{
-    b.addEventListener('click',()=>{
-      document.querySelector(b.dataset.goto).scrollIntoView({behavior:'smooth'});
-    });
-  });
-
-  // ---- Nav scroll state ----
-  const nav = document.getElementById('nav');
-  const onScroll = ()=> nav.classList.toggle('scrolled', window.scrollY>40);
-  onScroll(); window.addEventListener('scroll', onScroll, {passive:true});
-
-  // ---- Burger ----
-  const burger = document.getElementById('burger');
-  const navlinks = document.getElementById('navlinks');
-  burger.addEventListener('click',()=> navlinks.classList.toggle('open'));
-  navlinks.querySelectorAll('a').forEach(a=> a.addEventListener('click',()=> navlinks.classList.remove('open')));
-
-  // ---- Scrollspy ----
-  const links = [...document.querySelectorAll('.navlinks a')];
-  const secMap = links.map(a=>({a, sec:document.querySelector(a.getAttribute('href'))})).filter(x=>x.sec);
-  const spy = new IntersectionObserver((entries)=>{
-    entries.forEach(e=>{
-      if(e.isIntersecting){
-        links.forEach(l=>l.classList.remove('active'));
-        const m = secMap.find(x=>x.sec===e.target);
-        if(m) m.a.classList.add('active');
-      }
-    });
-  },{rootMargin:'-45% 0px -50% 0px'});
-  secMap.forEach(x=>spy.observe(x.sec));
-
-  // ---- Reveal ----
-  const io = new IntersectionObserver((entries)=>{
-    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
-  },{threshold:.12});
-  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
-</script>
 </body>
 </html>
